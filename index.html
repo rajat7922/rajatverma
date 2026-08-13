@@ -186,9 +186,15 @@ nav.scrolled .nav{box-shadow:0 18px 50px rgba(0,0,0,.35);border-color:rgba(255,2
 .fp-section-label{padding:28px 38px 6px;font:700 11px "Space Grotesk";letter-spacing:.16em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:9px}
 .fp-section-label:before{content:"";width:16px;height:1px;background:var(--gold);opacity:.6}
 .fp-banners{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:14px 38px 32px}
-.fp-banner{aspect-ratio:16/9;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#000}
+.fp-banner{aspect-ratio:16/9;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:#000;cursor:pointer;transition:border-color .3s ease,transform .3s ease,box-shadow .3s ease}
+.fp-banner:hover{border-color:rgba(255,196,91,.4);transform:translateY(-3px);box-shadow:0 18px 35px rgba(0,0,0,.2)}
 .fp-banner img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s cubic-bezier(.16,1,.3,1)}
 .fp-banner:hover img{transform:scale(1.07)}
+.lightbox{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:28px;background:rgba(3,7,12,.8);backdrop-filter:blur(4px);opacity:0;visibility:hidden;transition:opacity .2s ease,visibility .2s ease;z-index:130}
+.lightbox.open{opacity:1;visibility:visible}
+.lightbox-content{position:relative;max-width:min(92vw,1100px);width:100%;background:rgba(17,20,26,.96);border:1px solid var(--line);border-radius:20px;overflow:hidden;box-shadow:0 28px 80px rgba(0,0,0,.45)}
+.lightbox-image{display:block;width:100%;max-height:78vh;object-fit:contain;background:#000}
+.lightbox-close{position:absolute;top:12px;right:12px;width:40px;height:40px;border-radius:50%;border:1px solid var(--line);background:rgba(10,12,18,.9);color:#fff;font-size:22px;line-height:1;cursor:pointer}
 .fp-reels{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;padding:14px 38px 38px}
 .fp-reel{border-radius:18px;overflow:hidden;border:1px solid var(--line);background:#000;transition:border-color .35s ease,transform .35s cubic-bezier(.16,1,.3,1)}
 .fp-reel:hover{border-color:rgba(255,61,104,.4);transform:translateY(-4px)}
@@ -432,10 +438,18 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:#747884;font-size:1
  
       <div class="fp-section-label">Article banners &amp; thumbnail</div>
       <div class="fp-banners reveal-stagger">
-        <div class="fp-banner"><img src="project01/article-banner-1.jpg" alt="ServicePro911 article banner 1" loading="lazy"></div>
-        <div class="fp-banner"><img src="project01/article-banner-2.jpg" alt="ServicePro911 article banner 2" loading="lazy"></div>
-        <div class="fp-banner"><img src="project01/article-banner-3.jpg" alt="ServicePro911 article banner 3" loading="lazy"></div>
-        <div class="fp-banner"><img src="project01/youtube-thumbnail.jpg" alt="ServicePro911 YouTube thumbnail design" loading="lazy"></div>
+        <button type="button" class="fp-banner image-trigger" data-image="project01/article-banner-1.jpg" data-alt="ServicePro911 article banner 1" aria-label="View ServicePro911 article banner 1">
+          <img src="project01/article-banner-1.jpg" alt="ServicePro911 article banner 1" loading="lazy">
+        </button>
+        <button type="button" class="fp-banner image-trigger" data-image="project01/article-banner-2.jpg" data-alt="ServicePro911 article banner 2" aria-label="View ServicePro911 article banner 2">
+          <img src="project01/article-banner-2.jpg" alt="ServicePro911 article banner 2" loading="lazy">
+        </button>
+        <button type="button" class="fp-banner image-trigger" data-image="project01/article-banner-3.jpg" data-alt="ServicePro911 article banner 3" aria-label="View ServicePro911 article banner 3">
+          <img src="project01/article-banner-3.jpg" alt="ServicePro911 article banner 3" loading="lazy">
+        </button>
+        <button type="button" class="fp-banner image-trigger" data-image="project01/youtube-thumbnail.jpg" data-alt="ServicePro911 YouTube thumbnail design" aria-label="View ServicePro911 YouTube thumbnail design">
+          <img src="project01/youtube-thumbnail.jpg" alt="ServicePro911 YouTube thumbnail design" loading="lazy">
+        </button>
       </div>
  
       <div class="fp-section-label">Short-form video content</div>
@@ -574,6 +588,13 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:#747884;font-size:1
 </footer>
  
 <button class="to-top" id="toTop" aria-label="Back to top"><i class="fa-solid fa-arrow-up"></i></button>
+
+<div class="lightbox" id="imageLightbox" aria-hidden="true">
+  <div class="lightbox-content" role="dialog" aria-modal="true" aria-label="Image preview">
+    <button class="lightbox-close" type="button" aria-label="Close image preview">&times;</button>
+    <img class="lightbox-image" src="" alt="Preview image">
+  </div>
+</div>
  
 <script>
 /* mobile menu */
@@ -605,6 +626,44 @@ function onScroll(){
 document.addEventListener("scroll",onScroll,{passive:true});
 onScroll();
 toTop.addEventListener("click",()=>window.scrollTo({top:0,behavior:"smooth"}));
+ 
+/* image lightbox */
+const lightbox=document.getElementById("imageLightbox");
+const lightboxImage=lightbox.querySelector(".lightbox-image");
+const lightboxClose=lightbox.querySelector(".lightbox-close");
+const galleryTriggers=document.querySelectorAll(".image-trigger");
+
+function openLightbox(src,alt){
+  lightboxImage.src=src;
+  lightboxImage.alt=alt;
+  lightbox.classList.add("open");
+  lightbox.setAttribute("aria-hidden","false");
+  document.body.style.overflow="hidden";
+}
+
+function closeLightbox(){
+  lightbox.classList.remove("open");
+  lightbox.setAttribute("aria-hidden","true");
+  document.body.style.overflow="";
+}
+
+galleryTriggers.forEach(trigger=>{
+  trigger.addEventListener("click",()=>{
+    openLightbox(trigger.dataset.image, trigger.dataset.alt);
+  });
+});
+
+lightboxClose.addEventListener("click",closeLightbox);
+lightbox.addEventListener("click",event=>{
+  if(event.target===lightbox){
+    closeLightbox();
+  }
+});
+document.addEventListener("keydown",event=>{
+  if(event.key==="Escape" && lightbox.classList.contains("open")){
+    closeLightbox();
+  }
+});
  
 /* cursor glow (desktop only) */
 const glow=document.getElementById("cursorGlow");
