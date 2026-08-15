@@ -243,8 +243,10 @@ nav.scrolled .nav{box-shadow:0 18px 50px rgba(0,0,0,.35);border-color:rgba(255,2
 }
  
 /* SKILLS */
-.skill-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px}
-.skill-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px}
+.skill-grid{display:grid;grid-template-columns:1fr;gap:60px;justify-items:center;max-width:700px;margin:0 auto}
+.skill-grid .reveal{text-align:center}
+.skill-grid .eyebrow{justify-content:center;width:100%}
+.skill-list{display:flex;flex-wrap:wrap;gap:10px;margin-top:25px;justify-content:center}
 .pill{padding:10px 14px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.025);font-size:12px;color:#d5d6db;transition:transform .3s cubic-bezier(.16,1,.3,1),border-color .3s ease,background .3s ease,color .3s ease}
 .pill:hover{transform:translateY(-4px) scale(1.04);border-color:transparent;background:linear-gradient(135deg,rgba(255,61,104,.18),rgba(112,92,255,.18));color:#fff}
 .process{display:grid;gap:12px}
@@ -724,12 +726,6 @@ footer{border-top:1px solid var(--line);padding:28px 0;color:#747884;font-size:1
         <span class="pill">Content Creation</span><span class="pill">Video Editing</span><span class="pill">Reels / Shorts</span>
         <span class="pill">Time Management</span><span class="pill">Active Listening</span><span class="pill">Emotional Intelligence</span><span class="pill">Creative Thinking</span>
       </div>
-    </div>
-    <div class="process reveal-stagger">
-      <div class="process-card"><div class="process-no">01</div><div><strong>Research first</strong><span>Audience, trends and platform context before content goes live.</span></div></div>
-      <div class="process-card"><div class="process-no">02</div><div><strong>Create & optimise</strong><span>Platform-native content designed for visibility and engagement.</span></div></div>
-      <div class="process-card"><div class="process-no">03</div><div><strong>Publish consistently</strong><span>Structured scheduling and content planning across channels.</span></div></div>
-      <div class="process-card"><div class="process-no">04</div><div><strong>Track & adapt</strong><span>Use real performance data to refine future content.</span></div></div>
     </div>
   </div>
 </section>
